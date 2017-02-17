@@ -6,7 +6,7 @@ provider "aws" {
 resource "aws_iam_user" "admin" {
   count = "${length(split(",", var.admins))}"
   path  = "/sudoers/admins/"
-  name  = name  = "${element(split(",",var.admins), count.index)}"
+  name  = "${element(split(",",var.admins), count.index)}"
 
   force_destroy = true
 }
