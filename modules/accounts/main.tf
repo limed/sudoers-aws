@@ -51,3 +51,13 @@ resource "aws_iam_role" "admin" {
 }
 EOF
 }
+
+resource "aws_iam_access_key" "admin" {
+  count = "${length(split(",",var.admins))}"
+  user  = "${element(aws_iam_user.admin.*.name, count.index)}"
+}
+
+resource "aws_iam_group" "admins" {
+  name = "Administrators"
+  path = "/nubis/admins/"
+}
