@@ -1,5 +1,11 @@
-variable account_name {}
-
 variable aws_profile {
-    default = "default"
-  }
+  default = "default"
+}
+
+variable aws_region {
+  default = "us-west-2"
+}
+
+variable admins {
+  default = "limed"
+}
