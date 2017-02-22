@@ -24,15 +24,15 @@ if [ -z "${AWS_ACCESS_KEY_ID}" ] && [  -z "${AWS_SECRET_ACCESS_KEY}" ]; then
     die "[Error]: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY is not set"
 fi
 
-STATE_BUCKET=$(aws --region ${STATE_REGION} s3 ls | awk '${ print $3}' | grep ${STATE_BUCKET} | head)
-if [ -z "${STATE_BUCKET}" ]; then
+STATE_BUCKET_EXISTS=$(aws --region ${STATE_REGION} s3 ls | awk '{ print $3}' | grep ${STATE_BUCKET} | head)
+if [ -z "${STATE_BUCKET_EXISTS}" ]; then
     echo "Creating remote state bucket"
     aws --region "${STATE_REGION}" s3 mb s3://"${STATE_BUCKET}"
 fi
 
 echo "Setting up remote config"
 terraform remote config \
-    -backend=s3
+    -backend=s3 \
     -backend-config="bucket=${STATE_BUCKET}" \
     -backend-config="key=sudoers-aws/terraform.tfstate" \
     -backend-config="region=${STATE_REGION}"
