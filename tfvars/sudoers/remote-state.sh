@@ -1,0 +1,1 @@
+../../bin/remote-state.sh
