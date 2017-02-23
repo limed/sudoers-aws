@@ -28,6 +28,7 @@ STATE_BUCKET_EXISTS=$(aws --region ${STATE_REGION} s3 ls | awk '{ print $3}' | g
 if [ -z "${STATE_BUCKET_EXISTS}" ]; then
     echo "Creating remote state bucket"
     aws --region "${STATE_REGION}" s3 mb s3://"${STATE_BUCKET}"
+    aws --region "${STATE_REGION}" s3api put-bucket-versioning --bucket "${STATE_BUCKET}" --versioning-configuration Status=Enabled
 fi
 
 echo "Setting up remote config"
