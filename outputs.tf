@@ -18,3 +18,7 @@ output "admin_roles" {
 output "account_id" {
   value = "${module.accounts.account_id}"
 }
+
+output "readonly_roles" {
+  value = "${module.accounts.readonly_role}"
+}

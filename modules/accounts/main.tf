@@ -12,10 +12,8 @@ resource "aws_iam_user" "admin" {
 }
 
 resource "aws_iam_role_policy" "admin" {
-  count = "${length(split(",",var.admins))}"
-  name  = "${element(split(",",var.admins), count.index)}"
-
-  role = "${element(split(",",var.admins), count.index)}"
+  name  = "admin"
+  role = "${aws_iam_role.admin.id}"
 
   policy = <<EOF
 {
@@ -33,23 +31,45 @@ EOF
 }
 
 resource "aws_iam_role" "admin" {
-  count = "${length(split(",",var.admins))}"
-  path  = "/sudoers/admins/"
-  name  = "${element(split(",",var.admins), count.index)}"
-
+  name  = "admin"
+  path  = "/sudoers/admin/"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Action": "sts:AssumeRole",
-      "Principal" : { "AWS" : "${element(aws_iam_user.admin.*.arn, count.index)}" },
+      "Principal" : { "AWS" : [ ${join(",", formatlist("\"%s\"", aws_iam_user.admin.*.arn))} ]},
       "Effect": "Allow",
-      "Sid": "${element(split(",",var.admins), count.index)}"
+      "Sid": "admin"
     }
   ]
 }
 EOF
+}
+
+resource "aws_iam_role" "readonly" {
+  name  = "readonly"
+  path  = "/sudoers/readonly/"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal" : { "AWS" : [ ${join(",", formatlist("\"%s\"", aws_iam_user.admin.*.arn))} ]},
+      "Effect": "Allow",
+      "Sid": "readonly"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "readonly" {
+  name       = "read-only-attachments"
+  roles      = ["${aws_iam_role.readonly.name}"]
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
 
 resource "aws_iam_access_key" "admin" {
@@ -59,5 +79,21 @@ resource "aws_iam_access_key" "admin" {
 
 resource "aws_iam_group" "admins" {
   name = "Administrators"
-  path = "/nubis/admins/"
+  path = "/sudoers/admins/"
+}
+
+resource "aws_iam_policy_attachment" "admins" {
+  name       = "admins"
+  groups     = ["${aws_iam_group.admins.name}"]
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+resource "aws_iam_group_membership" "admins" {
+  name = "admins-group-membership"
+
+  users = [
+    "${aws_iam_user.admin.*.name}",
+  ]
+
+  group = "${aws_iam_group.admins.name}"
 }

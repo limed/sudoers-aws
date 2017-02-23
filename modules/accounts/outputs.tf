@@ -17,3 +17,7 @@ output "admin_roles" {
 output "account_id" {
   value = "${element(split(":",aws_iam_group.admins.arn), 4)}"
 }
+
+output "readonly_role" {
+  value = "${join(",", aws_iam_role.readonly.*.arn)}"
+}
