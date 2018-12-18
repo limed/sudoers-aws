@@ -32,8 +32,10 @@ if [ -z "${STATE_BUCKET_EXISTS}" ]; then
 fi
 
 echo "Setting up remote config"
-terraform remote config \
-    -backend=s3 \
+terraform init \
+    -input=true \
+    -upgrade=false \
     -backend-config="bucket=${STATE_BUCKET}" \
     -backend-config="key=sudoers-aws/terraform.tfstate" \
-    -backend-config="region=${STATE_REGION}"
+    -backend-config="region=${STATE_REGION}" \
+    ../
