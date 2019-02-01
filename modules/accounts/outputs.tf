@@ -1,23 +1,19 @@
-output "admin_users" {
-  value = "${join(",", aws_iam_access_key.admin.*.user)}"
+output "AdminRoleARN" {
+  value = "${aws_iam_role.admin.arn}"
 }
 
-output "admin_access_keys" {
-  value = "${join(",", aws_iam_access_key.admin.*.id)}"
+output "ReadOnlyRoleARN" {
+  value = "${aws_iam_role.readonly.arn}"
 }
 
-output "admin_secret_keys" {
-  value = "${join(",", aws_iam_access_key.admin.*.secret)}"
+output "users" {
+  value = ["${aws_iam_user.users.*.name}"]
 }
 
-output "admin_roles" {
-  value = "${join(",", aws_iam_role.admin.*.arn)}"
+output "accesskeys" {
+  value = ["${aws_iam_access_key.users.*.id}"]
 }
 
-output "account_id" {
-  value = "${element(split(":",aws_iam_group.admins.arn), 4)}"
-}
-
-output "readonly_role" {
-  value = "${join(",", aws_iam_role.readonly.*.arn)}"
+output "secretkeys" {
+  value = ["${aws_iam_access_key.users.*.secret}"]
 }
