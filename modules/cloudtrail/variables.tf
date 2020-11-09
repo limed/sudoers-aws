@@ -1,7 +1,5 @@
-variable "aws_profile" {
-}
-
-variable "aws_region" {
+variable "region" {
+  default = "us-west-2"
 }
 
 variable "trail_name" {
@@ -9,5 +7,5 @@ variable "trail_name" {
 }
 
 variable "cloudtrail_bucket" {
-  defaullt = "sudoers-cloudtrail"
+  default = "cloudtrail"
 }
