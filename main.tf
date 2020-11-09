@@ -32,3 +32,21 @@ module "iam" {
   superusers  = [module.limed.this_iam_user_name]
 }
 
+module "hyper_backup" {
+  source          = "./modules/buckets"
+  bucket_name     = "synology-backup-${data.aws_caller_identity.current.account_id}"
+  create_iam_user = true
+  create_iam_key  = true
+  iam_username    = "synology-backup"
+}
+
+# Imported
+module "limed-sudoers-backupbucket" {
+  source          = "./modules/buckets"
+  bucket_name     = "limed-sudoers-backupbucket"
+  lifecycle_rule  = local.lifecycle_rule
+  create_iam_user = true
+  create_iam_key  = true
+  iam_username    = "sudoers-backups"
+}
+
