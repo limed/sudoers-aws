@@ -1,7 +1,7 @@
-variable aws_profile {
+variable "aws_profile" {
 }
 
-variable aws_region {
+variable "aws_region" {
 }
 
 variable "backup-bucket" {
@@ -11,3 +11,4 @@ variable "backup-bucket" {
 variable "backup-user" {
   default = "sudoers-backupuser"
 }
+

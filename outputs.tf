@@ -1,24 +1,24 @@
-
-output "admin_users" {
-  value = "${module.accounts.admin_users}"
-}
-
-output "admin_access_keys" {
-  value = "${module.accounts.admin_access_keys}"
-}
-
-output "admin_secret_keys" {
-  value = "${module.accounts.admin_secret_keys}"
-}
-
-output "admin_roles" {
-  value = "${module.accounts.admin_roles}"
-}
-
 output "account_id" {
-  value = "${module.accounts.account_id}"
+  value = data.aws_caller_identity.current.account_id
 }
 
-output "readonly_roles" {
-  value = "${module.accounts.readonly_role}"
+output "admin_role_arn" {
+  value = module.iam.admin_role_arn
 }
+
+output "poweruser_role_arn" {
+  value = module.iam.poweruser_role_arn
+}
+
+output "readonly_role_arn" {
+  value = module.iam.readonly_role_arn
+}
+
+output "keybase_password_pgp_message" {
+  value = base64encode(module.limed.keybase_password_pgp_message)
+}
+
+output "keybase_secret_key_pgp_message" {
+  value = base64encode(module.limed.keybase_secret_key_pgp_message)
+}
+
